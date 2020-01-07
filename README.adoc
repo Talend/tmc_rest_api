@@ -1,0 +1,1 @@
+= Library to support the Talend Management Console ReST API's
