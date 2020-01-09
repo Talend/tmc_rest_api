@@ -58,7 +58,7 @@ public class ExecutableService {
         StringBuilder uri = new StringBuilder();
         uri.append(region.toString()+path);
         if (fiqlQuery != null) {
-            uri.append("?query="+fiqlQuery);
+            uri.append("?_s="+fiqlQuery);
         }
         if (id != null)
             uri.append("/"+id);
