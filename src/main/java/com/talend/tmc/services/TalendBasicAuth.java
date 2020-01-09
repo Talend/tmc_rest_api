@@ -3,7 +3,7 @@ package com.talend.tmc.services;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class TalendBasicAuth extends TalendAuthorizationImpl {
+public class TalendBasicAuth extends TalendCredentialsImpl {
     private final String username;
     private final String password;
 

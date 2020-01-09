@@ -1,6 +1,6 @@
 package com.talend.tmc.services;
 
-public enum Regions {
+public enum TalendCloudRegion {
     AWS_USA_EAST {
         public String toString() {
             return "https://api.us.cloud.talend.com/tmc/v1.3/";

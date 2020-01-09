@@ -1,6 +1,6 @@
 package com.talend.tmc.services;
 
-public abstract class TalendAuthorizationImpl implements TalendAuthorization {
+public abstract class TalendCredentialsImpl implements TalendCredentials {
 
     public String getUsername() {
         return null;

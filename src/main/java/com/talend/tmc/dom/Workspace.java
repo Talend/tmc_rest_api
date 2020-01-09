@@ -9,4 +9,5 @@ public class Workspace {
     private String description;
     private String owner;
     private String type;
+    private Environment environment;
 }
