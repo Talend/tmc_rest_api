@@ -1,12 +1,12 @@
 package com.talend.tmc.services;
 
-import org.springframework.http.HttpHeaders;
+import com.talend.tmc.services.executables.ExecutableService;
 
-import java.util.Base64;
-
-public class TalendService {
-
-
-
-
+public interface TalendService<T> {
+    default T instance(TalendCredentials credentials, TalendCloudRegion region) {
+        if (region == null) throw new NullPointerException("TalendCloudRegion cannot be null");
+        if (credentials == null) throw new NullPointerException("TalendCredentials cannot be null");
+//TODO
+        return null;
+    }
 }

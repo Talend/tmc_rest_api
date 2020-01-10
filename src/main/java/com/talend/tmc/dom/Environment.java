@@ -9,5 +9,5 @@ public class Environment {
     private String name;
     private String description;
     @JsonProperty("default")
-    private String _default;
+    private boolean _default;
 }

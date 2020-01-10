@@ -1,12 +1,11 @@
-package com.talend.tmc.services;
+package com.talend.tmc.services.workspaces;
 
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.talend.tmc.dom.Workspace;
+import com.talend.tmc.services.*;
 import org.apache.cxf.jaxrs.ext.search.SearchParseException;
-import org.apache.cxf.jaxrs.ext.search.client.FiqlSearchConditionBuilder;
-import org.apache.cxf.jaxrs.ext.search.client.SearchConditionBuilder;
 import org.apache.cxf.jaxrs.ext.search.fiql.FiqlParser;
 import org.springframework.http.HttpMethod;
 
@@ -17,24 +16,27 @@ public class WorkspaceService {
 
     private final String path = "workspaces";
     private final TalendApiClient client;
+    private final TalendCloudRegion region;
     private ObjectMapper mapper;
 
-    public static WorkspaceService newInstance(TalendCredentials credentials)
+    public static WorkspaceService instance(TalendCredentials credentials, TalendCloudRegion region) throws NullPointerException
     {
-        WorkspaceService instance = new WorkspaceService(credentials);
+        if (region == null) throw new NullPointerException("TalendCloudRegion cannot be null");
+        if (credentials == null) throw new NullPointerException("TalendCredentials cannot be null");
+        WorkspaceService _instance = new WorkspaceService(credentials, region);
 
-        return instance;
+        return _instance;
     }
 
-    private WorkspaceService(TalendCredentials credentials) {
+    private WorkspaceService(TalendCredentials credentials, TalendCloudRegion region) {
         client = TalendApiClient.createNewInstance(credentials);
-
+        this.region = region;
         // Set ObjectMapper
         this.mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public Workspace[] get(TalendCloudRegion region, String fiqlQuery) throws TalendRestException, SearchParseException, IOException {
+    public Workspace[] get(String fiqlQuery) throws TalendRestException, SearchParseException, IOException {
 
         //Validates the fiqlQuery to meet the FIQL Spec. If not throw exception immediately
         if (fiqlQuery != null) {
@@ -49,7 +51,6 @@ public class WorkspaceService {
             uri.append("?query="+fiqlQuery);
         }
 
-        System.out.println(uri.toString());
         Hashtable<Integer, String> response = client.call(HttpMethod.GET, uri.toString(), null);
 
         for (Integer httpStatus : response.keySet())

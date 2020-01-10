@@ -33,7 +33,7 @@ public class TalendApiClient {
         return instance;
     }
 
-    protected Hashtable<Integer, String> call(HttpMethod method, String uri, String payload) throws TalendRestException
+    public Hashtable<Integer, String> call(HttpMethod method, String uri, String payload) throws TalendRestException
     {
         Hashtable<Integer, String> response = new Hashtable<>();
         HttpEntity<String> requestEntity = null;
@@ -59,7 +59,7 @@ public class TalendApiClient {
     {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Content-Type", "application/json");
-        httpHeaders.add("Accept", "application/json");
+        httpHeaders.add("Accept", "application/json,text/plain");
         if (credentials instanceof TalendBearerAuth)
             httpHeaders.add("Authorization", "Bearer " + credentials.getBearerToken());
         else

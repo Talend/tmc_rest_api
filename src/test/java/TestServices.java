@@ -1,6 +1,6 @@
 import com.talend.tmc.dom.Workspace;
 import com.talend.tmc.services.*;
-import org.apache.cxf.jaxrs.ext.search.client.FiqlSearchConditionBuilder;
+import com.talend.tmc.services.workspaces.WorkspaceService;
 import org.apache.cxf.jaxrs.ext.search.client.SearchConditionBuilder;
 import org.junit.Test;
 
@@ -12,14 +12,14 @@ public class TestServices {
     @Test
     public void testWorkspaces() {
         TalendCredentials credentials = new TalendBearerAuth(bearerToken);
-        WorkspaceService service = WorkspaceService.newInstance(credentials);
+        WorkspaceService service = WorkspaceService.instance(credentials,TalendCloudRegion.AWS_USA_EAST);
         try {
             SearchConditionBuilder fiql = SearchConditionBuilder.instance("fiql");
 
 
             String params = fiql.is("owner").equalTo("tbennett").query();
 
-            Workspace[] workspaces = service.get(TalendCloudRegion.AWS_USA_EAST,params);
+            Workspace[] workspaces = service.get(params);
             for (Workspace workspace : workspaces)
                 System.out.println(workspace.toString());
         } catch (TalendRestException e) {
