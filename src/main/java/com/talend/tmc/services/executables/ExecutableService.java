@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 public class ExecutableService {
-    private final String path = "executables";
+    private final String path = "executables/tasks";
     private final TalendApiClient client;
     private final TalendCloudRegion region;
     private ObjectMapper mapper;
