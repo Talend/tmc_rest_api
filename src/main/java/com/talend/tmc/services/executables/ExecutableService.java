@@ -3,6 +3,7 @@ package com.talend.tmc.services.executables;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.talend.tmc.dom.Executable;
+import com.talend.tmc.dom.Items;
 import com.talend.tmc.services.*;
 import org.apache.cxf.jaxrs.ext.search.SearchParseException;
 import org.apache.cxf.jaxrs.ext.search.fiql.FiqlParser;
@@ -56,8 +57,8 @@ public class ExecutableService {
             FiqlParser<Executable> parser = new FiqlParser<>(Executable.class);
             parser.parse(fiqlQuery);
         }
-
-        Executable[] executables = null;
+        Items items = null;
+       
         StringBuilder uri = new StringBuilder();
         uri.append(region.toString()+path);
         if (fiqlQuery != null) {
@@ -76,11 +77,11 @@ public class ExecutableService {
                 TalendError error = mapper.readValue(payload, TalendError.class);
                 throw new TalendRestException(error.toString());
             } else {
-                executables = mapper.readValue(payload, Executable[].class);
+                items = mapper.readValue(payload, Items.class);
             }
 
         }
 
-        return executables;
+        return items.getExecutables();
     }
 }
