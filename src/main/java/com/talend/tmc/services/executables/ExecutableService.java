@@ -53,16 +53,17 @@ public class ExecutableService {
             SearchParseException, IOException
     {
         //Validates the fiqlQuery to meet the FIQL Spec. If not throw exception immediately
-        if (fiqlQuery != null) {
-            FiqlParser<Executable> parser = new FiqlParser<>(Executable.class);
-            parser.parse(fiqlQuery);
-        }
+        //if (fiqlQuery != null) {
+        //    FiqlParser<Executable> parser = new FiqlParser<>(Executable.class);
+        //    parser.parse(fiqlQuery);
+        //}
         Items items = null;
        
         StringBuilder uri = new StringBuilder();
         uri.append(region.toString()+path);
         if (fiqlQuery != null) {
-            uri.append("?_s="+fiqlQuery);
+            //uri.append("?_s="+fiqlQuery); Remove since v2.0
+            uri.append("?"+fiqlQuery);
         }
         if (id != null)
             uri.append("/"+id);
