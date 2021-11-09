@@ -9,15 +9,9 @@ public class Executable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String description;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String version;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String[] parameterNames;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Workspace workspace;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Environment sourceEnvironment;
+    private String artifactId;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Environment targetEnvironment;
+    private Runtime runtime;
 }

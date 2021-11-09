@@ -1,18 +1,19 @@
 package com.talend.tmc.services;
 
+import java.util.Base64;
+import java.util.Hashtable;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Base64;
-import java.util.Hashtable;
-
 public class TalendApiClient {
     private static TalendApiClient instance = null;
     private HttpHeaders httpHeaders;
-    private final TalendCredentials credentials;
+    @SuppressWarnings("unused")
+	private final TalendCredentials credentials;
     private RestTemplate rest;
 
     private TalendApiClient(TalendCredentials credentials)

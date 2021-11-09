@@ -2,12 +2,8 @@ package com.talend.tmc.services.runtime;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.talend.tmc.dom.Cluster;
-import com.talend.tmc.dom.ClusterRequest;
 import com.talend.tmc.dom.Engine;
-import com.talend.tmc.dom.Executable;
 import com.talend.tmc.services.*;
-import org.apache.cxf.jaxrs.ext.search.fiql.FiqlParser;
 import org.springframework.http.HttpMethod;
 
 import java.io.IOException;
@@ -113,11 +109,6 @@ public class EngineService {
     public Engine[] get(String fiqlQuery) throws TalendRestException, IOException,
             NullPointerException
     {
-        //Validates the fiqlQuery to meet the FIQL Spec. If not throw exception immediately
-        if (fiqlQuery != null) {
-            FiqlParser<Executable> parser = new FiqlParser<>(Executable.class);
-            parser.parse(fiqlQuery);
-        }
         Engine[] engines = null;
 
         StringBuilder uri = new StringBuilder();
