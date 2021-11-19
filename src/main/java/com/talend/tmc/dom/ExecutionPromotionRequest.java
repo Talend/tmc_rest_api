@@ -6,6 +6,7 @@ import lombok.Data;
 public class ExecutionPromotionRequest {
     private String executable;
     private boolean keepTargetResources;
+    private boolean keepTargetRunProfiles;
     private Advanced advanced;
 }
 

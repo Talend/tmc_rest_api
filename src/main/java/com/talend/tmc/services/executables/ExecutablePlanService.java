@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.talend.tmc.dom.Executable;
 import com.talend.tmc.dom.ExecutablePlanDetail;
+import com.talend.tmc.dom.Items;
 import com.talend.tmc.services.*;
 import org.springframework.http.HttpMethod;
 
@@ -66,7 +67,8 @@ public class ExecutablePlanService {
             IOException
     {
 
-        Executable[] executables = null;
+        Items items = null;
+        Executable[] returnValue = null;
         StringBuilder uri = new StringBuilder();
         uri.append(region.toString()+path);
         if (fiqlQuery != null) {
@@ -83,12 +85,13 @@ public class ExecutablePlanService {
                 TalendError error = mapper.readValue(payload, TalendError.class);
                 throw new TalendRestException(error.toString());
             } else {
-                executables = mapper.readValue(payload, Executable[].class);
+        		items = mapper.readValue(payload, Items.class);
+        		returnValue = items.getExecutables();
             }
 
         }
 
-        return executables;
+        return returnValue;
     }
 
 }
