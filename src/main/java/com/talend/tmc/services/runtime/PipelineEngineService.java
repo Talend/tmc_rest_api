@@ -2,6 +2,8 @@ package com.talend.tmc.services.runtime;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.talend.tmc.dom.PipelineEngine;
+import com.talend.tmc.dom.PipelineEngineRequest;
 import com.talend.tmc.dom.Engine;
 import com.talend.tmc.services.*;
 import org.springframework.http.HttpMethod;
@@ -11,22 +13,22 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Hashtable;
 
-public class EngineService {
-    private final String path = "runtimes/remote-engines";
+public class PipelineEngineService {
+    private final String path = "runtimes/pipeline-engines";
     private final TalendApiClient client;
     private final TalendCloudRegion region;
     private ObjectMapper mapper;
 
-    public static EngineService instance(TalendCredentials credentials, TalendCloudRegion region) throws NullPointerException
+    public static PipelineEngineService instance(TalendCredentials credentials, TalendCloudRegion region) throws NullPointerException
     {
         if (region == null) throw new NullPointerException("TalendCloudRegion cannot be null");
         if (credentials == null) throw new NullPointerException("TalendCredentials cannot be null");
-        EngineService _instance = new EngineService(credentials, region);
+        PipelineEngineService _instance = new PipelineEngineService(credentials, region);
 
         return _instance;
     }
 
-    private EngineService(TalendCredentials credentials, TalendCloudRegion region) {
+    private PipelineEngineService(TalendCredentials credentials, TalendCloudRegion region) {
         this.client = TalendApiClient.createNewInstance(credentials);
         this.region = region;
         // Set ObjectMapper
@@ -34,7 +36,7 @@ public class EngineService {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public Engine post(Engine request) throws TalendRestException, IOException,
+    public Engine post(PipelineEngineRequest request) throws TalendRestException, IOException,
             NullPointerException
     {
         if (request == null) throw new NullPointerException("Engine Request cannot be null");
@@ -106,10 +108,10 @@ public class EngineService {
         return isDeleted;
     }
 
-    public Engine[] get(String fiqlQuery) throws TalendRestException, IOException,
+    public PipelineEngine[] get(String fiqlQuery) throws TalendRestException, IOException,
             NullPointerException
     {
-        Engine[] engines = null;
+    	PipelineEngine[] engines = null;
 
         StringBuilder uri = new StringBuilder();
         uri.append(region.toString()+path);
@@ -127,7 +129,7 @@ public class EngineService {
                 TalendError error = mapper.readValue(payload, TalendError.class);
                 throw new TalendRestException(error.toString());
             } else {
-                engines = mapper.readValue(payload, Engine[].class);
+                engines = mapper.readValue(payload, PipelineEngine[].class);
             }
 
         }
@@ -135,11 +137,11 @@ public class EngineService {
         return engines;
     }
 
-    public Engine getById(String engineId) throws TalendRestException, IOException,
+    public PipelineEngine getById(String engineId) throws TalendRestException, IOException,
             NullPointerException
     {
         if (engineId == null) throw new NullPointerException("engineId cannot be null");
-        Engine engine = null;
+        PipelineEngine engine = null;
 
         StringBuilder uri = new StringBuilder();
         uri.append(region.toString()+path+"/"+engineId);
@@ -155,7 +157,7 @@ public class EngineService {
                 TalendError error = mapper.readValue(payload, TalendError.class);
                 throw new TalendRestException(error.toString());
             } else {
-                engine = mapper.readValue(payload, Engine.class);
+                engine = mapper.readValue(payload, PipelineEngine.class);
             }
 
         }

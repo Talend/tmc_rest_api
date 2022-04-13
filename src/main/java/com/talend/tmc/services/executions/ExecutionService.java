@@ -60,7 +60,6 @@ public class ExecutionService {
             } else {
                 executionResponse = mapper.readValue(payload, ExecutionResponse.class);
             }
-
         }
 
         return executionResponse;

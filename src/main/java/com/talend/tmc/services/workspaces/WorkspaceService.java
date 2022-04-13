@@ -1,16 +1,20 @@
 package com.talend.tmc.services.workspaces;
 
 
+import java.io.IOException;
+import java.util.Hashtable;
+
+import org.apache.cxf.jaxrs.ext.search.SearchParseException;
+import org.springframework.http.HttpMethod;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.talend.tmc.dom.Workspace;
-import com.talend.tmc.services.*;
-import org.apache.cxf.jaxrs.ext.search.SearchParseException;
-import org.apache.cxf.jaxrs.ext.search.fiql.FiqlParser;
-import org.springframework.http.HttpMethod;
-
-import java.io.IOException;
-import java.util.Hashtable;
+import com.talend.tmc.services.TalendApiClient;
+import com.talend.tmc.services.TalendCloudRegion;
+import com.talend.tmc.services.TalendCredentials;
+import com.talend.tmc.services.TalendError;
+import com.talend.tmc.services.TalendRestException;
 
 public class WorkspaceService {
 
@@ -36,13 +40,11 @@ public class WorkspaceService {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public Workspace[] get(String fiqlQuery) throws TalendRestException, SearchParseException, IOException {
+    public Workspace[] get() throws TalendRestException, SearchParseException, IOException {
+    	return get(null);
+    }
 
-        //Validates the fiqlQuery to meet the FIQL Spec. If not throw exception immediately
-        if (fiqlQuery != null) {
-            FiqlParser<Workspace> parser = new FiqlParser<>(Workspace.class);
-            parser.parse(fiqlQuery);
-        }
+    public Workspace[] get(String fiqlQuery) throws TalendRestException, SearchParseException, IOException {
 
         Workspace[] workspace = null;
         StringBuilder uri = new StringBuilder();

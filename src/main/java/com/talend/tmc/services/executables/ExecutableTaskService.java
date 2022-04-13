@@ -10,22 +10,22 @@ import org.springframework.http.HttpMethod;
 import java.io.IOException;
 import java.util.Hashtable;
 
-public class ExecutableService {
+public class ExecutableTaskService {
     private final String path = "executables/tasks";
     private final TalendApiClient client;
     private final TalendCloudRegion region;
     private ObjectMapper mapper;
 
-    public static ExecutableService instance(TalendCredentials credentials, TalendCloudRegion region) throws NullPointerException
+    public static ExecutableTaskService instance(TalendCredentials credentials, TalendCloudRegion region) throws NullPointerException
     {
         if (region == null) throw new NullPointerException("TalendCloudRegion cannot be null");
         if (credentials == null) throw new NullPointerException("TalendCredentials cannot be null");
-        ExecutableService _instance = new ExecutableService(credentials, region);
+        ExecutableTaskService _instance = new ExecutableTaskService(credentials, region);
 
         return _instance;
     }
 
-    private ExecutableService(TalendCredentials credentials, TalendCloudRegion region)
+    private ExecutableTaskService(TalendCredentials credentials, TalendCloudRegion region)
     {
         client = TalendApiClient.createNewInstance(credentials);
         this.region = region;

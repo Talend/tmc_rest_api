@@ -2,11 +2,8 @@ package com.talend.tmc.services.executables;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.talend.tmc.dom.Executable;
-import com.talend.tmc.dom.ExecutablePlanDetail;
+import com.talend.tmc.dom.Promotion;
 import com.talend.tmc.services.*;
-import org.apache.cxf.jaxrs.ext.search.SearchParseException;
-import org.apache.cxf.jaxrs.ext.search.fiql.FiqlParser;
 import org.springframework.http.HttpMethod;
 
 import java.io.IOException;
@@ -36,12 +33,12 @@ public class ExecutablePromotionService {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public Executable getById(String id) throws TalendRestException,
-            SearchParseException, IOException, NullPointerException
+    public Promotion getById(String id) throws TalendRestException,
+            IOException, NullPointerException
     {
         if (id == null) throw new NullPointerException("Value of id cannot be null");
 
-        Executable executable = null;
+        Promotion promotion = null;
         StringBuilder uri = new StringBuilder();
         uri.append(region.toString()+path);
         uri.append("/"+id);
@@ -56,24 +53,19 @@ public class ExecutablePromotionService {
                 TalendError error = mapper.readValue(payload, TalendError.class);
                 throw new TalendRestException(error.toString());
             } else {
-                executable = mapper.readValue(payload, Executable.class);
+            	promotion = mapper.readValue(payload, Promotion.class);
             }
 
         }
 
-        return executable;
+        return promotion;
     }
 
-    public Executable[] getByQuery(String fiqlQuery) throws TalendRestException,
-            SearchParseException, IOException
+    public Promotion[] getByQuery(String fiqlQuery) throws TalendRestException,
+             IOException
     {
-        //Validates the fiqlQuery to meet the FIQL Spec. If not throw exception immediately
-        if (fiqlQuery != null) {
-            FiqlParser<Executable> parser = new FiqlParser<>(Executable.class);
-            parser.parse(fiqlQuery);
-        }
 
-        Executable[] executables = null;
+        Promotion[] promotions = null;
         StringBuilder uri = new StringBuilder();
         uri.append(region.toString()+path);
         if (fiqlQuery != null) {
@@ -90,12 +82,12 @@ public class ExecutablePromotionService {
                 TalendError error = mapper.readValue(payload, TalendError.class);
                 throw new TalendRestException(error.toString());
             } else {
-                executables = mapper.readValue(payload, Executable[].class);
+            	promotions = mapper.readValue(payload, Promotion[].class);
             }
 
         }
 
-        return executables;
+        return promotions;
     }
 
 }

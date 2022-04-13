@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 @Data
-public class Executable {
-    private String executable;
+public class Artifact {
+    private String id;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Workspace workspace;
+    private String[] versions;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String artifactId;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Runtime runtime;
+    private String type;
 }

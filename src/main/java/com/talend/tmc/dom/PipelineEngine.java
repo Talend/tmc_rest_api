@@ -5,13 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class Engine {
+public class PipelineEngine {
     @JsonInclude(JsonInclude.Include.NON_NULL)
 //    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String id;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String targetId;
     @JsonInclude(JsonInclude.Include.NON_NULL)
 //    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     private String name;
@@ -31,36 +28,58 @@ public class Engine {
 //    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String availability;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-//    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    private String environmentId;
+//  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+  private boolean managed;
     @JsonInclude(JsonInclude.Include.NON_NULL)
 //    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    private String workspaceId;
+    private WorkspaceInfo workspaceInfo;
     @JsonInclude(JsonInclude.Include.NON_NULL)
 //    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     private String[] runProfiles;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+//  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String status;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
-    private Debug debug;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String clusterId;
     @JsonInclude(JsonInclude.Include.NON_NULL)
 //    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String preAuthorizedKey;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String type;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Report analyzeReport;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Report promotionReport;
+//  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+  private boolean cloudRunner;
 }
 
 @Data
-class Debug {
-    private String host;
+class WorkspaceInfo {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String id;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+//  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String name;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+//  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String description;
+//  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String owner;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+//  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    /* ['shared', 'personal', 'custom'], */
+    private String type;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+//  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private EnvironmentInfo environmentInfo;
+}
+
+@Data
+class EnvironmentInfo {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+//  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+  private String id;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+  private String name;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+//@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+  private String description;
+  @JsonProperty("default")
+  private boolean isDefault;
 }

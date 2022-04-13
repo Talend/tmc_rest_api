@@ -119,16 +119,16 @@ public class ClusterService {
             NullPointerException
     {
         //Validates the fiqlQuery to meet the FIQL Spec. If not throw exception immediately
-        if (fiqlQuery != null) {
+/*   kjdfkerhg     if (fiqlQuery != null) {
             FiqlParser<Executable> parser = new FiqlParser<>(Executable.class);
             parser.parse(fiqlQuery);
-        }
+        }*/
         Cluster[] clusters = null;
 
         StringBuilder uri = new StringBuilder();
         uri.append(region.toString()+path);
         if (fiqlQuery != null) {
-            uri.append("?_s="+fiqlQuery);
+            uri.append("?query="+fiqlQuery);
         }
 
         Hashtable<Integer, String> response = client.call(HttpMethod.GET, uri.toString(), null);

@@ -4,9 +4,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.talend.tmc.dom.Executable;
 import com.talend.tmc.dom.ExecutablePlanDetail;
+import com.talend.tmc.dom.ExecutableItems;
 import com.talend.tmc.services.*;
-import org.apache.cxf.jaxrs.ext.search.SearchParseException;
-import org.apache.cxf.jaxrs.ext.search.fiql.FiqlParser;
 import org.springframework.http.HttpMethod;
 
 import java.io.IOException;
@@ -37,7 +36,7 @@ public class ExecutablePlanService {
     }
 
     public ExecutablePlanDetail getById(String id) throws TalendRestException,
-            SearchParseException, IOException, NullPointerException
+             IOException, NullPointerException
     {
         if (id == null) throw new NullPointerException("Value of id cannot be null");
 
@@ -65,15 +64,11 @@ public class ExecutablePlanService {
     }
 
     public Executable[] getByQuery(String fiqlQuery) throws TalendRestException,
-            SearchParseException, IOException
+            IOException
     {
-        //Validates the fiqlQuery to meet the FIQL Spec. If not throw exception immediately
-        if (fiqlQuery != null) {
-            FiqlParser<Executable> parser = new FiqlParser<>(Executable.class);
-            parser.parse(fiqlQuery);
-        }
 
-        Executable[] executables = null;
+        ExecutableItems items = null;
+        Executable[] returnValue = null;
         StringBuilder uri = new StringBuilder();
         uri.append(region.toString()+path);
         if (fiqlQuery != null) {
@@ -90,12 +85,13 @@ public class ExecutablePlanService {
                 TalendError error = mapper.readValue(payload, TalendError.class);
                 throw new TalendRestException(error.toString());
             } else {
-                executables = mapper.readValue(payload, Executable[].class);
+        		items = mapper.readValue(payload, ExecutableItems.class);
+        		returnValue = items.getExecutables();
             }
 
         }
 
-        return executables;
+        return returnValue;
     }
 
 }
