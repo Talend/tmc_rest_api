@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.talend.tmc.dom.Executable;
 import com.talend.tmc.dom.ExecutablePlanDetail;
-import com.talend.tmc.dom.Items;
+import com.talend.tmc.dom.ExecutableItems;
 import com.talend.tmc.services.*;
 import org.springframework.http.HttpMethod;
 
@@ -67,7 +67,7 @@ public class ExecutablePlanService {
             IOException
     {
 
-        Items items = null;
+        ExecutableItems items = null;
         Executable[] returnValue = null;
         StringBuilder uri = new StringBuilder();
         uri.append(region.toString()+path);
@@ -85,7 +85,7 @@ public class ExecutablePlanService {
                 TalendError error = mapper.readValue(payload, TalendError.class);
                 throw new TalendRestException(error.toString());
             } else {
-        		items = mapper.readValue(payload, Items.class);
+        		items = mapper.readValue(payload, ExecutableItems.class);
         		returnValue = items.getExecutables();
             }
 

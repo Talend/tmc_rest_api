@@ -10,4 +10,6 @@ public class Artifact {
     private String name;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String[] versions;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String type;
 }

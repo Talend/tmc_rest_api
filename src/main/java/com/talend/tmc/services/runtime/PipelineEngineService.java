@@ -2,9 +2,10 @@ package com.talend.tmc.services.runtime;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.talend.tmc.dom.*;
+import com.talend.tmc.dom.PipelineEngine;
+import com.talend.tmc.dom.PipelineEngineRequest;
+import com.talend.tmc.dom.Engine;
 import com.talend.tmc.services.*;
-import org.apache.cxf.jaxrs.ext.search.fiql.FiqlParser;
 import org.springframework.http.HttpMethod;
 
 import java.io.IOException;
@@ -12,22 +13,22 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Hashtable;
 
-public class ClusterService {
-    private final String path = "runtimes/remote-engine-clusters";
+public class PipelineEngineService {
+    private final String path = "runtimes/pipeline-engines";
     private final TalendApiClient client;
     private final TalendCloudRegion region;
     private ObjectMapper mapper;
 
-    public static ClusterService instance(TalendCredentials credentials, TalendCloudRegion region) throws NullPointerException
+    public static PipelineEngineService instance(TalendCredentials credentials, TalendCloudRegion region) throws NullPointerException
     {
         if (region == null) throw new NullPointerException("TalendCloudRegion cannot be null");
         if (credentials == null) throw new NullPointerException("TalendCredentials cannot be null");
-        ClusterService _instance = new ClusterService(credentials, region);
+        PipelineEngineService _instance = new PipelineEngineService(credentials, region);
 
         return _instance;
     }
 
-    private ClusterService(TalendCredentials credentials, TalendCloudRegion region) {
+    private PipelineEngineService(TalendCredentials credentials, TalendCloudRegion region) {
         this.client = TalendApiClient.createNewInstance(credentials);
         this.region = region;
         // Set ObjectMapper
@@ -35,17 +36,17 @@ public class ClusterService {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    public Cluster post(ClusterRequest request) throws TalendRestException, IOException,
+    public Engine post(PipelineEngineRequest request) throws TalendRestException, IOException,
             NullPointerException
     {
-        if (request == null) throw new NullPointerException("ClusterRequest cannot be null");
+        if (request == null) throw new NullPointerException("Engine Request cannot be null");
         Writer jsonWriter = new StringWriter();
         mapper.writeValue(jsonWriter, request);
         jsonWriter.flush();
         StringBuilder uri = new StringBuilder();
         uri.append(region.toString()+path);
 
-        Cluster cluster = null;
+        Engine engine = null;
 
         Hashtable<Integer, String> response = client.call(HttpMethod.POST, uri.toString(), jsonWriter.toString());
 
@@ -57,48 +58,40 @@ public class ClusterService {
                 TalendError error = mapper.readValue(payload, TalendError.class);
                 throw new TalendRestException(error.toString());
             } else {
-                cluster = mapper.readValue(payload, Cluster.class);
+                engine = mapper.readValue(payload, Engine.class);
             }
 
         }
 
-        return cluster;
+        return engine;
     }
 
-    public boolean deleteCluster(String clusterId) throws TalendRestException, IOException,
+    public boolean delete(String engineId) throws TalendRestException, IOException,
             NullPointerException
     {
-        if (clusterId == null) throw new NullPointerException("clusterId cannot be null");
-        return action(clusterId, null, HttpMethod.DELETE);
-    }
-
-    public boolean deleteClusterRemoteEngine(String clusterId, String engineId) throws TalendRestException, IOException,
-            NullPointerException
-    {
-        if (clusterId == null) throw new NullPointerException("clusterId cannot be null");
         if (engineId == null) throw new NullPointerException("engineId cannot be null");
-        return action(clusterId, engineId, HttpMethod.DELETE);
+        return action(engineId, false);
     }
 
-    public boolean put(String clusterId, String engineId) throws TalendRestException, IOException,
+    public boolean unpair(String engineId) throws TalendRestException, IOException,
             NullPointerException
     {
-        if (clusterId == null) throw new NullPointerException("clusterId cannot be null");
         if (engineId == null) throw new NullPointerException("engineId cannot be null");
-        return action(clusterId, engineId, HttpMethod.PUT);
+        return action(engineId, true);
     }
 
-    private boolean action(String clusterId, String engineId, HttpMethod method) throws TalendRestException, IOException,
+
+    private boolean action(String engineId, boolean unpair) throws TalendRestException, IOException,
             NullPointerException
     {
         boolean isDeleted = false;
 
         StringBuilder uri = new StringBuilder();
-        uri.append(region.toString()+path+"/"+clusterId);
-        if (engineId != null)
-            uri.append("/engines/"+engineId);
+        uri.append(region.toString()+path+"/"+engineId);
+        if (unpair)
+            uri.append("/pairing");
 
-        Hashtable<Integer, String> response = client.call(method, uri.toString(), null);
+        Hashtable<Integer, String> response = client.call(HttpMethod.DELETE, uri.toString(), null);
 
         for (Integer httpStatus : response.keySet())
         {
@@ -115,15 +108,10 @@ public class ClusterService {
         return isDeleted;
     }
 
-    public Cluster[] get(String fiqlQuery) throws TalendRestException, IOException,
+    public PipelineEngine[] get(String fiqlQuery) throws TalendRestException, IOException,
             NullPointerException
     {
-        //Validates the fiqlQuery to meet the FIQL Spec. If not throw exception immediately
-/*   kjdfkerhg     if (fiqlQuery != null) {
-            FiqlParser<Executable> parser = new FiqlParser<>(Executable.class);
-            parser.parse(fiqlQuery);
-        }*/
-        Cluster[] clusters = null;
+    	PipelineEngine[] engines = null;
 
         StringBuilder uri = new StringBuilder();
         uri.append(region.toString()+path);
@@ -141,22 +129,22 @@ public class ClusterService {
                 TalendError error = mapper.readValue(payload, TalendError.class);
                 throw new TalendRestException(error.toString());
             } else {
-                clusters = mapper.readValue(payload, Cluster[].class);
+                engines = mapper.readValue(payload, PipelineEngine[].class);
             }
 
         }
 
-        return clusters;
+        return engines;
     }
 
-    public Cluster getById(String clusterId) throws TalendRestException, IOException,
+    public PipelineEngine getById(String engineId) throws TalendRestException, IOException,
             NullPointerException
     {
-        if (clusterId == null) throw new NullPointerException("clusterId cannot be null");
-        Cluster cluster = null;
+        if (engineId == null) throw new NullPointerException("engineId cannot be null");
+        PipelineEngine engine = null;
 
         StringBuilder uri = new StringBuilder();
-        uri.append(region.toString()+path+"/"+clusterId);
+        uri.append(region.toString()+path+"/"+engineId);
 
 
         Hashtable<Integer, String> response = client.call(HttpMethod.GET, uri.toString(), null);
@@ -169,11 +157,11 @@ public class ClusterService {
                 TalendError error = mapper.readValue(payload, TalendError.class);
                 throw new TalendRestException(error.toString());
             } else {
-                cluster = mapper.readValue(payload, Cluster.class);
+                engine = mapper.readValue(payload, PipelineEngine.class);
             }
 
         }
 
-        return cluster;
+        return engine;
     }
 }

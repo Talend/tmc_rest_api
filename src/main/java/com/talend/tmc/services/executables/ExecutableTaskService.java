@@ -3,7 +3,7 @@ package com.talend.tmc.services.executables;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.talend.tmc.dom.Executable;
-import com.talend.tmc.dom.Items;
+import com.talend.tmc.dom.ExecutableItems;
 import com.talend.tmc.services.*;
 import org.springframework.http.HttpMethod;
 
@@ -60,7 +60,7 @@ public class ExecutableTaskService {
     private Executable[] get(String query, String id) throws TalendRestException,
              IOException
     {
-        Items items = null;
+        ExecutableItems items = null;
         Executable executable = null;
         Executable[] returnValue = null; 
         
@@ -83,7 +83,7 @@ public class ExecutableTaskService {
                 throw new TalendRestException(error.toString());
             } else {
             	if (id == null) {
-            		items = mapper.readValue(payload, Items.class);
+            		items = mapper.readValue(payload, ExecutableItems.class);
             		returnValue = items.getExecutables();
             	} else {
             		executable = mapper.readValue(payload, Executable.class);
